@@ -3,18 +3,18 @@ import random
 import string
 from typing import List
 
-# Listas globais para armazenar usuários cadastrados
+
 funcionarios = []
 visitantes = {}
 
-# ------------------------ CLASSES PRINCIPAIS ------------------------
+
 
 class Usuario:
     def __init__(self, id: int, nome: str, documento: str, tipo: str):
         self.id = id
         self.nome = nome
         self.documento = documento
-        self.tipo = tipo  # "Funcionário" ou "Visitante"
+        self.tipo = tipo  
 
 class Funcionario(Usuario):
     def __init__(self, id: int, nome: str, documento: str, cargo: str, departamento: str, senha: str ):
@@ -28,10 +28,10 @@ class Visitante(Usuario):
         super().__init__(id, nome, documento, "Visitante")
         self.empresa = empresa
         self.senha = senha
-        self.expiracao = datetime.now() + timedelta(hours=1)  # Senha válida por 1 hora
+        self.expiracao = datetime.now() + timedelta(hours=1)  
 
 class Administrador(Funcionario):
-    ADMIN_CODIGO = "1234"  # Código fixo do administrador
+    ADMIN_CODIGO = "1234"  
 
     def __init__(self, id: int, nome: str, documento: str, cargo: str, departamento: str, permissao_total: bool):
         super().__init__(id, nome, documento, cargo, departamento)
@@ -42,7 +42,6 @@ class Administrador(Funcionario):
         codigo = input("Digite o código de administrador: ")
         return codigo == Administrador.ADMIN_CODIGO
 
-# ------------------------ ACESSO ------------------------
 
 class PontoDeAcesso:
     def __init__(self, id: int, localizacao: str, tipo: str):
@@ -70,12 +69,11 @@ class Acesso:
             else:
                 status = "Negado"
         else:
-            status = "Autorizado"  # Funcionários têm acesso livre
+            status = "Autorizado"  
         
         Acesso(usuario, ponto, status)
         print(f"✅ {usuario.nome} - {status}")
 
-# ------------------------ RELATÓRIOS ------------------------
 
 class Relatorio:
     @staticmethod
@@ -84,7 +82,7 @@ class Relatorio:
         for acesso in Acesso.acessos:
             print(f"{acesso.data_hora} - {acesso.usuario.nome} - {acesso.status}")
 
-# ------------------------ FUNÇÕES DO SISTEMA ------------------------
+
 
 def gerar_senha():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
@@ -113,7 +111,6 @@ def cadastrar_usuario():
 def verificar_acesso():
     documento = input("Digite o documento: ")
 
-    # Buscar usuário nas listas de cadastrados
     usuario = next((u for u in funcionarios if u.documento == documento), visitantes.get(documento, None))
 
     if usuario:
@@ -123,7 +120,6 @@ def verificar_acesso():
     else:
         print("❌ Usuário não encontrado!")
 
-# ------------------------ EXECUÇÃO ------------------------
 
 if Administrador.autenticar():
     while True:
